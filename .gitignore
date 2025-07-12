@@ -1,0 +1,95 @@
+# Node dependencies and logs
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage and test output
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+junit.xml
+
+# Dependency directories
+jspm_packages/
+bower_components/
+
+# npm/yarn cache
+.npm/
+.yarn/
+.yarnrc.yml
+.yarn-integrity
+
+# Parcel/Next/Nuxt/Vuepress/Serverless build outputs
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vuepress/dist/
+.serverless/
+dist/
+build/
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+
+# Security and audit files
+npm-audit.json
+.npm-audit.json
+audit-results.json
+
+# Database and backup files
+*.sqlite
+*.sqlite3
+*.db
+*.backup
+*.bak
+*.orig
+
+# Security certificates and keys
+*.pem
+*.key
+*.crt
+*.csr
+*.p12
+*.pfx
+
+# Lock files (choose one strategy)
+# package-lock.json  # Uncomment if using yarn exclusively
+# yarn.lock          # Uncomment if using npm exclusively

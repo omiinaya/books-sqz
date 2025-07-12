@@ -1,52 +1,130 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html lang="en">
 
 <head>
-
   <meta charset="UTF-8">
-  <title>Express Library</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all books in the Express Library - a comprehensive book management system">
+  <meta name="keywords" content="books, library, express, reading, literature">
+  <meta name="author" content="Books SQZ Team">
+  
+  <!-- Preconnect to external domains for performance -->
+  <link rel="preconnect" href="https://maxcdn.bootstrapcdn.com">
+  <link rel="preconnect" href="https://code.jquery.com">
+  
+  <title>All Books - Express Library</title>
 
-  <!-- Bootstrap CSS & JS -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <!-- Critical CSS inline for faster loading -->
+  <style>
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 200px;
+      font-size: 1.2rem;
+      color: #6c757d;
+    }
+    .book-card {
+      border: 1px solid #dee2e6;
+      border-radius: 0.375rem;
+      margin-bottom: 1rem;
+      transition: box-shadow 0.15s ease-in-out;
+    }
+    .book-card:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      border: 0 !important;
+    }
+  </style>
 
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.2/css/bootstrap.min.css" 
+        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" 
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" 
+        crossorigin="anonymous">
 </head>
 
 <body>
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="visually-hidden">Skip to main content</a>
 
   <div class="container">
-    <div class="jumbotron">
+    <header class="jumbotron" role="banner">
       <h1>Express Library</h1>
-      <h3>Books Books Books!</h3>
-      <hr>
-      <a href="/" class="btn btn-danger btn-lg">
-        <span class="fa fa-eye"></span> Search Books</a>
-      <a href="/add" class="btn btn-danger btn-lg">
-        <span class="fa fa-plus"></span> Add New Book</a>
-      <a href="/all" class="btn btn-danger btn-lg">
-        <span class="fa fa-th-list"></span> All Books</a>
-      <a href="/long" class="btn btn-danger btn-lg">
-        <span class="fa fa-th-list"></span> Long Books</a>
-      <a href="/short" class="btn btn-danger btn-lg">
-        <span class="fa fa-th-list"></span> Short Books</a>
-    </div>
-    <div class="row">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-header">
-            Book Database
-          </div>
-          <div class="card-body" id="well-section">
-            <!-- Content will go in here -->
+      <p class="lead">Discover and manage your book collection</p>
+      <hr class="my-4">
+      
+      <nav role="navigation" aria-label="Main navigation">
+        <div class="btn-group" role="group" aria-label="Library navigation">
+          <a href="/" class="btn btn-primary btn-lg" aria-label="Search books">
+            <span class="fa fa-search" aria-hidden="true"></span> Search Books
+          </a>
+          <a href="/add" class="btn btn-success btn-lg" aria-label="Add new book">
+            <span class="fa fa-plus" aria-hidden="true"></span> Add New Book
+          </a>
+          <a href="/all" class="btn btn-info btn-lg" aria-label="View all books" aria-current="page">
+            <span class="fa fa-th-list" aria-hidden="true"></span> All Books
+          </a>
+          <a href="/long" class="btn btn-warning btn-lg" aria-label="View long books">
+            <span class="fa fa-book" aria-hidden="true"></span> Long Books
+          </a>
+          <a href="/short" class="btn btn-secondary btn-lg" aria-label="View short books">
+            <span class="fa fa-bookmark" aria-hidden="true"></span> Short Books
+          </a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content" role="main">
+      <div class="row">
+        <div class="col-12">
+          <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <h2 class="mb-0">Book Database</h2>
+              <span id="book-count" class="badge badge-primary" aria-live="polite">Loading...</span>
+            </div>
+            <div class="card-body">
+              <div id="loading" class="loading" aria-live="polite">
+                <span class="fa fa-spinner fa-spin" aria-hidden="true"></span>
+                <span class="ml-2">Loading books...</span>
+              </div>
+              <div id="well-section" role="region" aria-label="Book list" style="display: none;">
+                <!-- Book content will be dynamically loaded here -->
+              </div>
+              <div id="error-section" class="alert alert-danger" role="alert" style="display: none;">
+                <h3>Error Loading Books</h3>
+                <p>We're having trouble loading the book database. Please try refreshing the page.</p>
+                <button id="retry-btn" class="btn btn-danger">
+                  <span class="fa fa-refresh" aria-hidden="true"></span> Try Again
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-
+    </main>
   </div>
+
+  <!-- Scripts loaded at end for performance -->
+  <!-- jQuery with integrity check -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js" 
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" 
+          crossorigin="anonymous"></script>
+  
+  <!-- Bootstrap JS -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.6.2/js/bootstrap.min.js" 
+          integrity="sha384-+sLIOodYLS7CIrQpBjl+C7nPvqq+FbNUBDunl/OZv93DB7Ln/533i8e/mZXLi/P+" 
+          crossorigin="anonymous"></script>
 
   <!-- Custom Script -->
   <script src="js/all.js" type="text/javascript"></script>

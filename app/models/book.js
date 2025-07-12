@@ -1,43 +1,117 @@
-// Dependencies
-// =============================================================
+/**
+ * Book Model
+ * Sequelize model with validation, indexes, and modern practices
+ */
 
-// Require the sequelize library
-// Require the connection to the database (connection.js)
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/connection.js');
 
-// Create a "Book" model with the following configuration
+class Book extends Model {
+  /**
+   * Get formatted book information
+   * @returns {string} Formatted book display string
+   */
+  getDisplayName() {
+    return `${this.title} by ${this.author}`;
+  }
 
-// 1. A title property of type STRING
-// 2. An author property of type STRING
-// 3. A genre property of type STRING
-// 4. A pages property of type INTEGER
+  /**
+   * Check if book is considered long (>300 pages)
+   * @returns {boolean} True if book is long
+   */
+  isLongBook() {
+    return this.pages > 300;
+  }
 
-// Sync model with DB
+  /**
+   * Get reading time estimate (assuming 250 words per page, 200 WPM)
+   * @returns {number} Estimated reading time in hours
+   */
+  getReadingTimeHours() {
+    return Math.round((this.pages * 250) / (200 * 60) * 100) / 100;
+  }
+}
 
-// Export the book model for other files to use
-// Dependencies
-// =============================================================
-
-// Sequelize (capital) references the standard library
-var Sequelize = require("sequelize");
-// sequelize (lowercase) references our connection to the DB.
-var sequelize = require("../config/connection.js");
-
-// Creates a "Character" model that matches up with DB
-var Books = sequelize.define("book", {
-  // the routeName gets saved as a string
-  title: Sequelize.STRING,
-  // the character's role (a string)
-  author: Sequelize.STRING,
-  // the character's age (an int)
-  genre: Sequelize.STRING,
-  // and the character's force points (an int)
-  pages: Sequelize.INTEGER
+Book.init({
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  title: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Title cannot be empty'
+      },
+      len: {
+        args: [1, 255],
+        msg: 'Title must be between 1 and 255 characters'
+      }
+    }
+  },
+  author: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Author cannot be empty'
+      },
+      len: {
+        args: [1, 255],
+        msg: 'Author must be between 1 and 255 characters'
+      }
+    }
+  },
+  genre: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        msg: 'Genre cannot be empty'
+      },
+      isIn: {
+        args: [['Fiction', 'Non-Fiction', 'Science Fiction', 'Fantasy', 'Mystery', 'Romance', 'Thriller', 'Biography', 'History', 'Other']],
+        msg: 'Genre must be a valid category'
+      }
+    }
+  },
+  pages: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    validate: {
+      isInt: {
+        msg: 'Pages must be a whole number'
+      },
+      min: {
+        args: [1],
+        msg: 'Pages must be at least 1'
+      },
+      max: {
+        args: [10000],
+        msg: 'Pages cannot exceed 10,000'
+      }
+    }
+  }
 }, {
-  timestamps: false
+  sequelize,
+  modelName: 'Book',
+  tableName: 'books',
+  indexes: [
+    {
+      fields: ['title']
+    },
+    {
+      fields: ['author']
+    },
+    {
+      fields: ['genre']
+    },
+    {
+      fields: ['pages']
+    }
+  ]
 });
 
-// Syncs with DB
-Books.sync();
-
-// Makes the Character Model available for other files (will also create a table)
-module.exports = Books;
+module.exports = Book;
