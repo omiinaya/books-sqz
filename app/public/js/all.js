@@ -3,15 +3,15 @@
  * Modern, accessible, and performant book display with error handling
  */
 
-$(document).ready(function() {
-  'use strict';
+$(document).ready(function () {
+  "use strict";
 
   // Cache DOM elements
-  const $wellSection = $('#well-section');
-  const $loadingSection = $('#loading');
-  const $errorSection = $('#error-section');
-  const $bookCount = $('#book-count');
-  const $retryBtn = $('#retry-btn');
+  const $wellSection = $("#well-section");
+  const $loadingSection = $("#loading");
+  const $errorSection = $("#error-section");
+  const $bookCount = $("#book-count");
+  const $retryBtn = $("#retry-btn");
 
   /**
    * Creates a book card element with proper accessibility
@@ -21,9 +21,11 @@ $(document).ready(function() {
    */
   function createBookCard(book, index) {
     const bookId = `book-${book.id || index}`;
-    const readingTime = book.pages ? Math.round((book.pages * 250) / (200 * 60) * 100) / 100 : 0;
+    const readingTime = book.pages
+      ? Math.round(((book.pages * 250) / (200 * 60)) * 100) / 100
+      : 0;
     const isLongBook = book.pages > 300;
-    
+
     return $(`
       <article class="book-card card mb-3" id="${bookId}" tabindex="0">
         <div class="card-body">
@@ -37,21 +39,25 @@ $(document).ready(function() {
                 <strong>Author:</strong> ${escapeHtml(book.author)}<br>
                 <strong>Genre:</strong> 
                 <span class="badge badge-${getGenreBadgeClass(book.genre)}">${escapeHtml(book.genre)}</span><br>
-                <strong>Pages:</strong> ${book.pages || 'Unknown'}
-                ${isLongBook ? '<span class="badge badge-warning ml-2">Long Read</span>' : ''}
+                <strong>Pages:</strong> ${book.pages || "Unknown"}
+                ${isLongBook ? '<span class="badge badge-warning ml-2">Long Read</span>' : ""}
               </p>
             </div>
             <div class="col-md-4 text-md-right">
               <div class="book-meta">
-                ${readingTime > 0 ? `
+                ${
+                  readingTime > 0
+                    ? `
                   <small class="text-muted d-block">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
                     ~${readingTime} hours reading time
                   </small>
-                ` : ''}
+                `
+                    : ""
+                }
                 <small class="text-muted d-block mt-1">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
-                  Added: ${book.createdAt ? new Date(book.createdAt).toLocaleDateString() : 'Unknown'}
+                  Added: ${book.createdAt ? new Date(book.createdAt).toLocaleDateString() : "Unknown"}
                 </small>
               </div>
             </div>
@@ -67,8 +73,8 @@ $(document).ready(function() {
    * @returns {string} Escaped text
    */
   function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
+    if (!text) return "";
+    const div = document.createElement("div");
     div.textContent = text;
     return div.innerHTML;
   }
@@ -80,17 +86,17 @@ $(document).ready(function() {
    */
   function getGenreBadgeClass(genre) {
     const genreClasses = {
-      'Fiction': 'primary',
-      'Non-Fiction': 'success',
-      'Science Fiction': 'info',
-      'Fantasy': 'purple',
-      'Mystery': 'dark',
-      'Romance': 'danger',
-      'Thriller': 'warning',
-      'Biography': 'secondary',
-      'History': 'light'
+      Fiction: "primary",
+      "Non-Fiction": "success",
+      "Science Fiction": "info",
+      Fantasy: "purple",
+      Mystery: "dark",
+      Romance: "danger",
+      Thriller: "warning",
+      Biography: "secondary",
+      History: "light",
     };
-    return genreClasses[genre] || 'secondary';
+    return genreClasses[genre] || "secondary";
   }
 
   /**
@@ -101,31 +107,32 @@ $(document).ready(function() {
     $loadingSection.show();
     $wellSection.hide();
     $errorSection.hide();
-    $bookCount.text('Loading...');
+    $bookCount.text("Loading...");
 
     // Make API request with timeout
     const xhr = $.ajax({
-      url: '/api/all',
-      method: 'GET',
+      url: "/api/all",
+      method: "GET",
       timeout: 10000, // 10 second timeout
-      dataType: 'json',
-      data: { page } // Send page number
+      dataType: "json",
+      data: { page }, // Send page number
     });
 
-  xhr.done(function(response) {
-    // Handle new API response structure
-    const data = response.books || response;
-    
-    if (!Array.isArray(data)) {
-      throw new Error('Invalid data format received');
-    }
+    xhr
+      .done(function (response) {
+        // Handle new API response structure
+        const data = response.books || response;
 
-    // Hide loading, show content
-    $loadingSection.hide();
-    $wellSection.show().empty();
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format received");
+        }
 
-    if (data.length === 0) {
-      $wellSection.html(`
+        // Hide loading, show content
+        $loadingSection.hide();
+        $wellSection.show().empty();
+
+        if (data.length === 0) {
+          $wellSection.html(`
         <div class="text-center py-5">
           <i class="fa fa-book fa-3x text-muted mb-3"></i>
           <h3>No Books Found</h3>
@@ -135,44 +142,46 @@ $(document).ready(function() {
           </a>
         </div>
       `);
-      $bookCount.text('0 books');
-      return;
-    }
+          $bookCount.text("0 books");
+          return;
+        }
 
-    // Create and append book cards
-    const fragment = document.createDocumentFragment();
-    data.forEach((book, index) => {
-      const $bookCard = createBookCard(book, index);
-      fragment.appendChild($bookCard[0]);
-    });
+        // Create and append book cards
+        const fragment = document.createDocumentFragment();
+        data.forEach((book, index) => {
+          const $bookCard = createBookCard(book, index);
+          fragment.appendChild($bookCard[0]);
+        });
 
-    $wellSection[0].appendChild(fragment);
-    
-    // Update count based on response structure
-    const count = response.pagination ? response.pagination.total : data.length;
-    $bookCount.text(`${count} book${count !== 1 ? 's' : ''}`);
+        $wellSection[0].appendChild(fragment);
 
-    // Show pagination if available
-    if (response.pagination) {
-      displayPagination(response.pagination);
-    }
+        // Update count based on response structure
+        const count = response.pagination
+          ? response.pagination.total
+          : data.length;
+        $bookCount.text(`${count} book${count !== 1 ? "s" : ""}`);
 
-    // Announce completion for screen readers
-    $wellSection.attr('aria-live', 'polite');
-    setTimeout(() => {
-      $wellSection.removeAttr('aria-live');
-    }, 1000);
+        // Show pagination if available
+        if (response.pagination) {
+          displayPagination(response.pagination);
+        }
 
-    }).fail(function(xhr, status, error) {
-      console.error('Failed to load books:', { xhr, status, error });
-      
-      $loadingSection.hide();
-      $errorSection.show();
-      $bookCount.text('Error');
+        // Announce completion for screen readers
+        $wellSection.attr("aria-live", "polite");
+        setTimeout(() => {
+          $wellSection.removeAttr("aria-live");
+        }, 1000);
+      })
+      .fail(function (xhr, status, error) {
+        console.error("Failed to load books:", { xhr, status, error });
 
-      // Focus error section for accessibility
-      $errorSection.focus();
-    });
+        $loadingSection.hide();
+        $errorSection.show();
+        $bookCount.text("Error");
+
+        // Focus error section for accessibility
+        $errorSection.focus();
+      });
   }
 
   /**
@@ -182,7 +191,9 @@ $(document).ready(function() {
   function displayPagination(pagination) {
     if (pagination.pages <= 1) return;
 
-    const $paginationContainer = $('<nav class="mt-4" aria-label="Book pagination">');
+    const $paginationContainer = $(
+      '<nav class="mt-4" aria-label="Book pagination">',
+    );
     const $pagination = $('<ul class="pagination justify-content-center">');
 
     // Previous button
@@ -201,7 +212,7 @@ $(document).ready(function() {
     const endPage = Math.min(pagination.pages, pagination.page + 2);
 
     for (let i = startPage; i <= endPage; i++) {
-      const isActive = i === pagination.page ? ' active' : '';
+      const isActive = i === pagination.page ? " active" : "";
       $pagination.append(`
         <li class="page-item${isActive}">
           <a class="page-link" href="#" data-page="${i}">${i}</a>
@@ -224,9 +235,9 @@ $(document).ready(function() {
     $wellSection.after($paginationContainer);
 
     // Handle pagination clicks
-    $pagination.on('click', 'a', function(e) {
+    $pagination.on("click", "a", function (e) {
       e.preventDefault();
-      const page = $(this).data('page');
+      const page = $(this).data("page");
       if (page && page !== pagination.page) {
         loadBooks(page);
       }
@@ -234,15 +245,15 @@ $(document).ready(function() {
   }
 
   // Retry button handler
-  $retryBtn.on('click', function() {
+  $retryBtn.on("click", function () {
     loadBooks();
   });
 
   // Keyboard navigation for book cards
-  $wellSection.on('keydown', '.book-card', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
+  $wellSection.on("keydown", ".book-card", function (e) {
+    if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      $(this).find('.card-body').trigger('click');
+      $(this).find(".card-body").trigger("click");
     }
   });
 
@@ -251,7 +262,7 @@ $(document).ready(function() {
 
   // Auto-refresh every 5 minutes if page is visible
   let refreshInterval;
-  
+
   function startAutoRefresh() {
     refreshInterval = setInterval(() => {
       if (!document.hidden) {
@@ -267,7 +278,7 @@ $(document).ready(function() {
   }
 
   // Handle page visibility changes
-  document.addEventListener('visibilitychange', () => {
+  document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
       stopAutoRefresh();
     } else {
@@ -279,5 +290,5 @@ $(document).ready(function() {
   startAutoRefresh();
 
   // Cleanup on page unload
-  $(window).on('beforeunload', stopAutoRefresh);
+  $(window).on("beforeunload", stopAutoRefresh);
 });

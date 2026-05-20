@@ -3,7 +3,7 @@
  * Serves static HTML pages with proper caching and security headers
  */
 
-const path = require('path');
+const path = require("path");
 
 /**
  * Secure file serving middleware
@@ -12,22 +12,22 @@ const path = require('path');
  */
 const serveSecureHTML = (filename) => (req, res, next) => {
   try {
-    const filePath = path.join(__dirname, '../public', filename);
-    
+    const filePath = path.join(__dirname, "../public", filename);
+
     // Set security headers for HTML pages
     res.set({
-      'X-Content-Type-Options': 'nosniff',
-      'X-Frame-Options': 'DENY',
-      'X-XSS-Protection': '1; mode=block',
-      'Cache-Control': 'public, max-age=300' // 5 minutes cache
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "1; mode=block",
+      "Cache-Control": "public, max-age=300", // 5 minutes cache
     });
-    
+
     res.sendFile(filePath, (err) => {
       if (err) {
         console.error(`Error serving ${filename}:`, err);
         res.status(404).json({
-          error: 'Page not found',
-          message: 'The requested page could not be found.'
+          error: "Page not found",
+          message: "The requested page could not be found.",
         });
       }
     });
@@ -36,46 +36,45 @@ const serveSecureHTML = (filename) => (req, res, next) => {
   }
 };
 
-module.exports = function(app) {
-
+module.exports = function (app) {
   // Home route - loads book search/view page
-  app.get('/', serveSecureHTML('view.html'));
+  app.get("/", serveSecureHTML("view.html"));
 
   // Add book route - loads the add book form
-  app.get('/add', serveSecureHTML('add.html'));
+  app.get("/add", serveSecureHTML("add.html"));
 
   // All books route - displays all books in the database
-  app.get('/all', serveSecureHTML('all.html'));
+  app.get("/all", serveSecureHTML("all.html"));
 
   // Short books route - displays books with 150 pages or less
-  app.get('/short', serveSecureHTML('short.html'));
+  app.get("/short", serveSecureHTML("short.html"));
 
   // Long books route - displays books with more than 300 pages
-  app.get('/long', serveSecureHTML('long.html'));
+  app.get("/long", serveSecureHTML("long.html"));
 
   // Health check endpoint
-  app.get('/health', (req, res) => {
+  app.get("/health", (req, res) => {
     res.json({
-      status: 'OK',
+      status: "OK",
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
-      environment: process.env.NODE_ENV || 'development'
+      environment: process.env.NODE_ENV || "development",
     });
   });
 
   // Robots.txt for SEO
-  app.get('/robots.txt', (req, res) => {
-    res.type('text/plain');
+  app.get("/robots.txt", (req, res) => {
+    res.type("text/plain");
     res.send(`User-agent: *
 Disallow: /api/
 Allow: /
 
-Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`);
+Sitemap: ${req.protocol}://${req.get("host")}/sitemap.xml`);
   });
 
   // Basic sitemap for SEO
-  app.get('/sitemap.xml', (req, res) => {
-    const baseUrl = `${req.protocol}://${req.get('host')}`;
+  app.get("/sitemap.xml", (req, res) => {
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
@@ -104,9 +103,8 @@ Sitemap: ${req.protocol}://${req.get('host')}/sitemap.xml`);
     <priority>0.7</priority>
   </url>
 </urlset>`;
-    
-    res.type('application/xml');
+
+    res.type("application/xml");
     res.send(sitemap);
   });
-
 };
