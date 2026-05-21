@@ -4,10 +4,10 @@
  */
 
 // Set test environment variables
-process.env.NODE_ENV = "test";
-process.env.DB_NAME = "test_db";
-process.env.DB_USER = "test_user";
-process.env.DB_PASS = "test_pass";
+process.env.NODE_ENV = 'test';
+process.env.DB_NAME = 'test_db';
+process.env.DB_USER = 'test_user';
+process.env.DB_PASS = 'test_pass';
 
 // Global test timeout
 jest.setTimeout(10000);
@@ -24,7 +24,7 @@ global.console = {
 };
 
 // Mock Sequelize for database operations
-jest.mock("sequelize", () => {
+jest.mock('sequelize', () => {
   const mSequelize = {
     authenticate: jest.fn(() => Promise.resolve()),
     sync: jest.fn(() => Promise.resolve()),
@@ -39,15 +39,15 @@ jest.mock("sequelize", () => {
       sum: jest.fn(),
     })),
     Op: {
-      like: Symbol("like"),
-      gt: Symbol("gt"),
-      lte: Symbol("lte"),
+      like: Symbol('like'),
+      gt: Symbol('gt'),
+      lte: Symbol('lte'),
     },
     fn: jest.fn(),
     col: jest.fn(),
     DataTypes: {
-      STRING: "STRING",
-      INTEGER: "INTEGER",
+      STRING: 'STRING',
+      INTEGER: 'INTEGER',
     },
   };
 

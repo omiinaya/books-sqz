@@ -3,8 +3,8 @@
  * Sequelize model with validation, indexes, and modern practices
  */
 
-const { DataTypes, Model } = require("sequelize");
-const sequelize = require("../config/connection.js");
+const { DataTypes, Model } = require('sequelize');
+const sequelize = require('../config/connection.js');
 
 class Book extends Model {
   /**
@@ -44,11 +44,11 @@ Book.init(
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Title cannot be empty",
+          msg: 'Title cannot be empty',
         },
         len: {
           args: [1, 255],
-          msg: "Title must be between 1 and 255 characters",
+          msg: 'Title must be between 1 and 255 characters',
         },
       },
     },
@@ -57,11 +57,11 @@ Book.init(
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Author cannot be empty",
+          msg: 'Author cannot be empty',
         },
         len: {
           args: [1, 255],
-          msg: "Author must be between 1 and 255 characters",
+          msg: 'Author must be between 1 and 255 characters',
         },
       },
     },
@@ -70,24 +70,24 @@ Book.init(
       allowNull: false,
       validate: {
         notEmpty: {
-          msg: "Genre cannot be empty",
+          msg: 'Genre cannot be empty',
         },
         isIn: {
           args: [
             [
-              "Fiction",
-              "Non-Fiction",
-              "Science Fiction",
-              "Fantasy",
-              "Mystery",
-              "Romance",
-              "Thriller",
-              "Biography",
-              "History",
-              "Other",
+              'Fiction',
+              'Non-Fiction',
+              'Science Fiction',
+              'Fantasy',
+              'Mystery',
+              'Romance',
+              'Thriller',
+              'Biography',
+              'History',
+              'Other',
             ],
           ],
-          msg: "Genre must be a valid category",
+          msg: 'Genre must be a valid category',
         },
       },
     },
@@ -96,35 +96,35 @@ Book.init(
       allowNull: false,
       validate: {
         isInt: {
-          msg: "Pages must be a whole number",
+          msg: 'Pages must be a whole number',
         },
         min: {
           args: [1],
-          msg: "Pages must be at least 1",
+          msg: 'Pages must be at least 1',
         },
         max: {
           args: [10000],
-          msg: "Pages cannot exceed 10,000",
+          msg: 'Pages cannot exceed 10,000',
         },
       },
     },
   },
   {
     sequelize,
-    modelName: "Book",
-    tableName: "books",
+    modelName: 'Book',
+    tableName: 'books',
     indexes: [
       {
-        fields: ["title"],
+        fields: ['title'],
       },
       {
-        fields: ["author"],
+        fields: ['author'],
       },
       {
-        fields: ["genre"],
+        fields: ['genre'],
       },
       {
-        fields: ["pages"],
+        fields: ['pages'],
       },
     ],
   },

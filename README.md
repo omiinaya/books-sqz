@@ -15,24 +15,28 @@ A modern, high-performance book library management system built with Express.js,
 ## 🏗️ Architecture (ACID Scoring)
 
 ### Architecture (A)
+
 - **Clean Code**: Modular structure with separation of concerns
 - **Design Patterns**: RESTful API design with proper error handling
 - **Scalability**: Connection pooling and optimized database queries
 - **Testing**: Unit and integration tests with coverage reporting
 
 ### Cross-Domain (C)
+
 - **Performance**: Compression, caching, and optimized asset loading
 - **Compatibility**: Cross-browser support with graceful degradation
 - **Accessibility**: Screen reader support and keyboard navigation
 - **Mobile**: Responsive design with mobile-first approach
 
 ### Innovation (I)
+
 - **Modern Stack**: Latest Node.js, Express 4.x, and Sequelize 6.x
 - **Security**: Advanced security headers and rate limiting
 - **Performance**: Async/await patterns and connection pooling
 - **Developer Experience**: ESLint, automated testing, and hot reloading
 
 ### Documentation (D)
+
 - **Self-Documenting**: Clear naming conventions and inline comments
 - **API Documentation**: Comprehensive endpoint documentation
 - **Setup Guide**: Step-by-step installation instructions
@@ -49,32 +53,37 @@ A modern, high-performance book library management system built with Express.js,
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd books-sqz
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Configure environment**
+
    ```bash
    cp .env.example .env
    # Edit .env with your database credentials
    ```
 
 4. **Setup database**
+
    ```sql
    CREATE DATABASE sequelize_library;
    ```
 
 5. **Start the application**
+
    ```bash
    # Development mode with hot reloading
    npm run dev
-   
+
    # Production mode
    npm start
    ```
@@ -86,23 +95,24 @@ A modern, high-performance book library management system built with Express.js,
 
 ### Books Endpoints
 
-| Method | Endpoint | Description | Parameters |
-|--------|----------|-------------|------------|
-| GET | `/api/all` | Get all books with pagination | `page`, `limit`, `sortBy`, `order` |
-| GET | `/api/book/:id` | Get single book by ID | `id` (required) |
-| GET | `/api/search/:title` | Search books by title | `title` (min 2 chars) |
-| GET | `/api/genre/:genre` | Get books by genre | `genre` (required) |
-| GET | `/api/author/:author` | Get books by author | `author` (required) |
-| GET | `/api/books/long` | Get books > 300 pages | - |
-| GET | `/api/books/short` | Get books ≤ 150 pages | - |
-| POST | `/api/books` | Create new book | `title`, `author`, `genre`, `pages` |
-| PUT | `/api/books/:id` | Update existing book | `id`, `title`, `author`, `genre`, `pages` |
-| DELETE | `/api/books/:id` | Delete book | `id` (required) |
-| GET | `/api/stats` | Get database statistics | - |
+| Method | Endpoint              | Description                   | Parameters                                |
+| ------ | --------------------- | ----------------------------- | ----------------------------------------- |
+| GET    | `/api/all`            | Get all books with pagination | `page`, `limit`, `sortBy`, `order`        |
+| GET    | `/api/book/:id`       | Get single book by ID         | `id` (required)                           |
+| GET    | `/api/search/:title`  | Search books by title         | `title` (min 2 chars)                     |
+| GET    | `/api/genre/:genre`   | Get books by genre            | `genre` (required)                        |
+| GET    | `/api/author/:author` | Get books by author           | `author` (required)                       |
+| GET    | `/api/books/long`     | Get books > 300 pages         | -                                         |
+| GET    | `/api/books/short`    | Get books ≤ 150 pages         | -                                         |
+| POST   | `/api/books`          | Create new book               | `title`, `author`, `genre`, `pages`       |
+| PUT    | `/api/books/:id`      | Update existing book          | `id`, `title`, `author`, `genre`, `pages` |
+| DELETE | `/api/books/:id`      | Delete book                   | `id` (required)                           |
+| GET    | `/api/stats`          | Get database statistics       | -                                         |
 
 ### Example Requests
 
 **Create a new book:**
+
 ```bash
 curl -X POST http://localhost:8080/api/books \
   -H "Content-Type: application/json" \
@@ -115,11 +125,13 @@ curl -X POST http://localhost:8080/api/books \
 ```
 
 **Get paginated books:**
+
 ```bash
 curl "http://localhost:8080/api/all?page=1&limit=10&sortBy=title&order=ASC"
 ```
 
 **Search books by title:**
+
 ```bash
 curl "http://localhost:8080/api/search/gatsby"
 ```
@@ -190,6 +202,7 @@ npm start
 ### Security Policy
 
 Please see our [Security Policy](SECURITY.md) for information on:
+
 - Reporting vulnerabilities
 - Supported versions
 - Security measures implemented

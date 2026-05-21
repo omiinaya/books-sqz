@@ -3,6 +3,7 @@
 ## Production Deployment Checklist
 
 ### Environment Setup
+
 - [ ] Set NODE_ENV=production
 - [ ] Configure production database credentials
 - [ ] Set secure SESSION_SECRET
@@ -10,6 +11,7 @@
 - [ ] Set up reverse proxy (nginx/Apache)
 
 ### Security Hardening
+
 - [ ] Enable HTTPS only
 - [ ] Configure proper CORS origins
 - [ ] Set up rate limiting
@@ -18,6 +20,7 @@
 - [ ] Set up SSL/TLS certificates
 
 ### Performance Optimization
+
 - [ ] Enable gzip compression
 - [ ] Configure static file caching
 - [ ] Set up CDN for assets
@@ -26,6 +29,7 @@
 - [ ] Enable application monitoring
 
 ### Database Setup
+
 - [ ] Create production database
 - [ ] Run database migrations
 - [ ] Set up database backups
@@ -33,6 +37,7 @@
 - [ ] Set up database monitoring
 
 ### Monitoring & Logging
+
 - [ ] Configure application logging
 - [ ] Set up error tracking
 - [ ] Configure health checks
@@ -42,6 +47,7 @@
 ## Docker Deployment
 
 ### Dockerfile (Production-ready)
+
 ```dockerfile
 FROM node:18-alpine AS base
 WORKDIR /app
@@ -59,8 +65,9 @@ CMD ["npm", "start"]
 ```
 
 ### docker-compose.yml
+
 ```yaml
-version: '3.8'
+version: "3.8"
 
 services:
   app:
@@ -107,6 +114,7 @@ volumes:
 ## Nginx Configuration
 
 ### nginx.conf
+
 ```nginx
 events {
     worker_connections 1024;
@@ -160,6 +168,7 @@ http {
 ## Environment Variables (Production)
 
 ### .env.production
+
 ```bash
 # Database
 DB_NAME=books_sqz_prod
@@ -193,12 +202,14 @@ The application includes built-in health check endpoints:
 ## Monitoring Setup
 
 ### Application Metrics
+
 - Response time tracking
 - Error rate monitoring
 - Database connection pooling metrics
 - Memory and CPU usage
 
 ### Recommended Tools
+
 - **Application Monitoring**: New Relic, DataDog, or Prometheus
 - **Error Tracking**: Sentry or Rollbar
 - **Log Management**: ELK Stack or Splunk
@@ -207,6 +218,7 @@ The application includes built-in health check endpoints:
 ## Backup Strategy
 
 ### Database Backups
+
 ```bash
 # Daily backup script
 #!/bin/bash
@@ -218,6 +230,7 @@ find /backups -name "books_sqz_*.sql" -mtime +30 -delete
 ```
 
 ### Application Backups
+
 - Code repository (Git)
 - Environment configuration
 - SSL certificates
@@ -226,12 +239,14 @@ find /backups -name "books_sqz_*.sql" -mtime +30 -delete
 ## Scaling Considerations
 
 ### Horizontal Scaling
+
 - Load balancer configuration
 - Session store (Redis)
 - Database read replicas
 - CDN for static assets
 
 ### Vertical Scaling
+
 - CPU and memory optimization
 - Database performance tuning
 - Connection pool sizing
@@ -240,6 +255,7 @@ find /backups -name "books_sqz_*.sql" -mtime +30 -delete
 ## Troubleshooting
 
 ### Common Issues
+
 1. **Database Connection Errors**
    - Check database credentials
    - Verify network connectivity
@@ -256,6 +272,7 @@ find /backups -name "books_sqz_*.sql" -mtime +30 -delete
    - Review access logs
 
 ### Log Locations
+
 - Application logs: `/var/log/books-sqz/`
 - Access logs: `/var/log/nginx/access.log`
 - Error logs: `/var/log/nginx/error.log`

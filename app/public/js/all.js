@@ -4,14 +4,14 @@
  */
 
 $(document).ready(function () {
-  "use strict";
+  'use strict';
 
   // Cache DOM elements
-  const $wellSection = $("#well-section");
-  const $loadingSection = $("#loading");
-  const $errorSection = $("#error-section");
-  const $bookCount = $("#book-count");
-  const $retryBtn = $("#retry-btn");
+  const $wellSection = $('#well-section');
+  const $loadingSection = $('#loading');
+  const $errorSection = $('#error-section');
+  const $bookCount = $('#book-count');
+  const $retryBtn = $('#retry-btn');
 
   /**
    * Creates a book card element with proper accessibility
@@ -39,25 +39,25 @@ $(document).ready(function () {
                 <strong>Author:</strong> ${escapeHtml(book.author)}<br>
                 <strong>Genre:</strong> 
                 <span class="badge badge-${getGenreBadgeClass(book.genre)}">${escapeHtml(book.genre)}</span><br>
-                <strong>Pages:</strong> ${book.pages || "Unknown"}
-                ${isLongBook ? '<span class="badge badge-warning ml-2">Long Read</span>' : ""}
+                <strong>Pages:</strong> ${book.pages || 'Unknown'}
+                ${isLongBook ? '<span class="badge badge-warning ml-2">Long Read</span>' : ''}
               </p>
             </div>
             <div class="col-md-4 text-md-right">
               <div class="book-meta">
                 ${
-                  readingTime > 0
-                    ? `
+  readingTime > 0
+    ? `
                   <small class="text-muted d-block">
                     <i class="fa fa-clock-o" aria-hidden="true"></i>
                     ~${readingTime} hours reading time
                   </small>
                 `
-                    : ""
-                }
+    : ''
+}
                 <small class="text-muted d-block mt-1">
                   <i class="fa fa-calendar" aria-hidden="true"></i>
-                  Added: ${book.createdAt ? new Date(book.createdAt).toLocaleDateString() : "Unknown"}
+                  Added: ${book.createdAt ? new Date(book.createdAt).toLocaleDateString() : 'Unknown'}
                 </small>
               </div>
             </div>
@@ -73,8 +73,8 @@ $(document).ready(function () {
    * @returns {string} Escaped text
    */
   function escapeHtml(text) {
-    if (!text) return "";
-    const div = document.createElement("div");
+    if (!text) return '';
+    const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
@@ -86,17 +86,17 @@ $(document).ready(function () {
    */
   function getGenreBadgeClass(genre) {
     const genreClasses = {
-      Fiction: "primary",
-      "Non-Fiction": "success",
-      "Science Fiction": "info",
-      Fantasy: "purple",
-      Mystery: "dark",
-      Romance: "danger",
-      Thriller: "warning",
-      Biography: "secondary",
-      History: "light",
+      Fiction: 'primary',
+      'Non-Fiction': 'success',
+      'Science Fiction': 'info',
+      Fantasy: 'purple',
+      Mystery: 'dark',
+      Romance: 'danger',
+      Thriller: 'warning',
+      Biography: 'secondary',
+      History: 'light',
     };
-    return genreClasses[genre] || "secondary";
+    return genreClasses[genre] || 'secondary';
   }
 
   /**
@@ -107,14 +107,14 @@ $(document).ready(function () {
     $loadingSection.show();
     $wellSection.hide();
     $errorSection.hide();
-    $bookCount.text("Loading...");
+    $bookCount.text('Loading...');
 
     // Make API request with timeout
     const xhr = $.ajax({
-      url: "/api/all",
-      method: "GET",
+      url: '/api/all',
+      method: 'GET',
       timeout: 10000, // 10 second timeout
-      dataType: "json",
+      dataType: 'json',
       data: { page }, // Send page number
     });
 
@@ -124,7 +124,7 @@ $(document).ready(function () {
         const data = response.books || response;
 
         if (!Array.isArray(data)) {
-          throw new Error("Invalid data format received");
+          throw new Error('Invalid data format received');
         }
 
         // Hide loading, show content
@@ -142,7 +142,7 @@ $(document).ready(function () {
           </a>
         </div>
       `);
-          $bookCount.text("0 books");
+          $bookCount.text('0 books');
           return;
         }
 
@@ -159,7 +159,7 @@ $(document).ready(function () {
         const count = response.pagination
           ? response.pagination.total
           : data.length;
-        $bookCount.text(`${count} book${count !== 1 ? "s" : ""}`);
+        $bookCount.text(`${count} book${count !== 1 ? 's' : ''}`);
 
         // Show pagination if available
         if (response.pagination) {
@@ -167,17 +167,17 @@ $(document).ready(function () {
         }
 
         // Announce completion for screen readers
-        $wellSection.attr("aria-live", "polite");
+        $wellSection.attr('aria-live', 'polite');
         setTimeout(() => {
-          $wellSection.removeAttr("aria-live");
+          $wellSection.removeAttr('aria-live');
         }, 1000);
       })
       .fail(function (xhr, status, error) {
-        console.error("Failed to load books:", { xhr, status, error });
+        console.error('Failed to load books:', { xhr, status, error });
 
         $loadingSection.hide();
         $errorSection.show();
-        $bookCount.text("Error");
+        $bookCount.text('Error');
 
         // Focus error section for accessibility
         $errorSection.focus();
@@ -212,7 +212,7 @@ $(document).ready(function () {
     const endPage = Math.min(pagination.pages, pagination.page + 2);
 
     for (let i = startPage; i <= endPage; i++) {
-      const isActive = i === pagination.page ? " active" : "";
+      const isActive = i === pagination.page ? ' active' : '';
       $pagination.append(`
         <li class="page-item${isActive}">
           <a class="page-link" href="#" data-page="${i}">${i}</a>
@@ -235,9 +235,9 @@ $(document).ready(function () {
     $wellSection.after($paginationContainer);
 
     // Handle pagination clicks
-    $pagination.on("click", "a", function (e) {
+    $pagination.on('click', 'a', function (e) {
       e.preventDefault();
-      const page = $(this).data("page");
+      const page = $(this).data('page');
       if (page && page !== pagination.page) {
         loadBooks(page);
       }
@@ -245,15 +245,15 @@ $(document).ready(function () {
   }
 
   // Retry button handler
-  $retryBtn.on("click", function () {
+  $retryBtn.on('click', function () {
     loadBooks();
   });
 
   // Keyboard navigation for book cards
-  $wellSection.on("keydown", ".book-card", function (e) {
-    if (e.key === "Enter" || e.key === " ") {
+  $wellSection.on('keydown', '.book-card', function (e) {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      $(this).find(".card-body").trigger("click");
+      $(this).find('.card-body').trigger('click');
     }
   });
 
@@ -278,7 +278,7 @@ $(document).ready(function () {
   }
 
   // Handle page visibility changes
-  document.addEventListener("visibilitychange", () => {
+  document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       stopAutoRefresh();
     } else {
@@ -290,5 +290,5 @@ $(document).ready(function () {
   startAutoRefresh();
 
   // Cleanup on page unload
-  $(window).on("beforeunload", stopAutoRefresh);
+  $(window).on('beforeunload', stopAutoRefresh);
 });

@@ -3,8 +3,8 @@
  * Follows ACID principles and best practices
  */
 
-const Book = require("../models/book.js");
-const { Op } = require("sequelize");
+const Book = require('../models/book.js');
+const { Op } = require('sequelize');
 
 /**
  * Async error handler wrapper
@@ -26,21 +26,21 @@ const validateBookData = (req, res, next) => {
   const errors = [];
 
   if (!title || title.trim().length === 0) {
-    errors.push("Title is required");
+    errors.push('Title is required');
   }
   if (!author || author.trim().length === 0) {
-    errors.push("Author is required");
+    errors.push('Author is required');
   }
   if (!genre || genre.trim().length === 0) {
-    errors.push("Genre is required");
+    errors.push('Genre is required');
   }
   if (!pages || isNaN(pages) || pages < 1) {
-    errors.push("Pages must be a positive number");
+    errors.push('Pages must be a positive number');
   }
 
   if (errors.length > 0) {
     return res.status(400).json({
-      error: "Validation failed",
+      error: 'Validation failed',
       details: errors,
     });
   }
@@ -51,26 +51,26 @@ const validateBookData = (req, res, next) => {
 module.exports = function (app) {
   // Get all books with pagination and sorting
   app.get(
-    "/api/all",
+    '/api/all',
     asyncHandler(async (req, res) => {
       const page = parseInt(req.query.page) || 1;
       const limit = Math.min(parseInt(req.query.limit) || 50, 100); // Max 100 items
       const offset = (page - 1) * limit;
-      const sortBy = req.query.sortBy || "createdAt";
-      const order = req.query.order === "ASC" ? "ASC" : "DESC";
+      const sortBy = req.query.sortBy || 'createdAt';
+      const order = req.query.order === 'ASC' ? 'ASC' : 'DESC';
 
       const { count, rows } = await Book.findAndCountAll({
         limit,
         offset,
         order: [[sortBy, order]],
         attributes: [
-          "id",
-          "title",
-          "author",
-          "genre",
-          "pages",
-          "createdAt",
-          "updatedAt",
+          'id',
+          'title',
+          'author',
+          'genre',
+          'pages',
+          'createdAt',
+          'updatedAt',
         ],
       });
 
@@ -88,13 +88,13 @@ module.exports = function (app) {
 
   // Get books by title search
   app.get(
-    "/api/search/:title",
+    '/api/search/:title',
     asyncHandler(async (req, res) => {
       const { title } = req.params;
 
       if (!title || title.trim().length < 2) {
         return res.status(400).json({
-          error: "Search term must be at least 2 characters long",
+          error: 'Search term must be at least 2 characters long',
         });
       }
 
@@ -104,7 +104,7 @@ module.exports = function (app) {
             [Op.like]: `%${title}%`,
           },
         },
-        order: [["title", "ASC"]],
+        order: [['title', 'ASC']],
         limit: 50,
       });
 
@@ -118,13 +118,13 @@ module.exports = function (app) {
 
   // Get single book by ID
   app.get(
-    "/api/book/:id",
+    '/api/book/:id',
     asyncHandler(async (req, res) => {
       const { id } = req.params;
 
       if (!id || isNaN(id)) {
         return res.status(400).json({
-          error: "Invalid book ID",
+          error: 'Invalid book ID',
         });
       }
 
@@ -132,7 +132,7 @@ module.exports = function (app) {
 
       if (!book) {
         return res.status(404).json({
-          error: "Book not found",
+          error: 'Book not found',
         });
       }
 
@@ -142,13 +142,13 @@ module.exports = function (app) {
 
   // Get books by genre
   app.get(
-    "/api/genre/:genre",
+    '/api/genre/:genre',
     asyncHandler(async (req, res) => {
       const { genre } = req.params;
 
       if (!genre) {
         return res.status(400).json({
-          error: "Genre parameter is required",
+          error: 'Genre parameter is required',
         });
       }
 
@@ -158,7 +158,7 @@ module.exports = function (app) {
             [Op.like]: `%${genre}%`,
           },
         },
-        order: [["title", "ASC"]],
+        order: [['title', 'ASC']],
         limit: 100,
       });
 
@@ -172,13 +172,13 @@ module.exports = function (app) {
 
   // Get books by author
   app.get(
-    "/api/author/:author",
+    '/api/author/:author',
     asyncHandler(async (req, res) => {
       const { author } = req.params;
 
       if (!author) {
         return res.status(400).json({
-          error: "Author parameter is required",
+          error: 'Author parameter is required',
         });
       }
 
@@ -188,7 +188,7 @@ module.exports = function (app) {
             [Op.like]: `%${author}%`,
           },
         },
-        order: [["title", "ASC"]],
+        order: [['title', 'ASC']],
         limit: 100,
       });
 
@@ -202,7 +202,7 @@ module.exports = function (app) {
 
   // Get long books (more than 300 pages)
   app.get(
-    "/api/books/long",
+    '/api/books/long',
     asyncHandler(async (req, res) => {
       const books = await Book.findAll({
         where: {
@@ -210,22 +210,22 @@ module.exports = function (app) {
             [Op.gt]: 300,
           },
         },
-        order: [["pages", "DESC"]],
+        order: [['pages', 'DESC']],
         limit: 100,
       });
 
       res.json({
         books,
-        filter: "long",
+        filter: 'long',
         count: books.length,
-        criteria: "More than 300 pages",
+        criteria: 'More than 300 pages',
       });
     }),
   );
 
   // Get short books (150 pages or less)
   app.get(
-    "/api/books/short",
+    '/api/books/short',
     asyncHandler(async (req, res) => {
       const books = await Book.findAll({
         where: {
@@ -233,22 +233,22 @@ module.exports = function (app) {
             [Op.lte]: 150,
           },
         },
-        order: [["pages", "ASC"]],
+        order: [['pages', 'ASC']],
         limit: 100,
       });
 
       res.json({
         books,
-        filter: "short",
+        filter: 'short',
         count: books.length,
-        criteria: "150 pages or less",
+        criteria: '150 pages or less',
       });
     }),
   );
 
   // Create a new book
   app.post(
-    "/api/books",
+    '/api/books',
     validateBookData,
     asyncHandler(async (req, res) => {
       const { title, author, genre, pages } = req.body;
@@ -263,7 +263,7 @@ module.exports = function (app) {
 
       if (existingBook) {
         return res.status(409).json({
-          error: "A book with this title and author already exists",
+          error: 'A book with this title and author already exists',
           existingBook: {
             id: existingBook.id,
             title: existingBook.title,
@@ -280,7 +280,7 @@ module.exports = function (app) {
       });
 
       res.status(201).json({
-        message: "Book created successfully",
+        message: 'Book created successfully',
         book,
       });
     }),
@@ -288,7 +288,7 @@ module.exports = function (app) {
 
   // Update a book
   app.put(
-    "/api/books/:id",
+    '/api/books/:id',
     validateBookData,
     asyncHandler(async (req, res) => {
       const { id } = req.params;
@@ -296,7 +296,7 @@ module.exports = function (app) {
 
       if (!id || isNaN(id)) {
         return res.status(400).json({
-          error: "Invalid book ID",
+          error: 'Invalid book ID',
         });
       }
 
@@ -304,7 +304,7 @@ module.exports = function (app) {
 
       if (!book) {
         return res.status(404).json({
-          error: "Book not found",
+          error: 'Book not found',
         });
       }
 
@@ -316,7 +316,7 @@ module.exports = function (app) {
       });
 
       res.json({
-        message: "Book updated successfully",
+        message: 'Book updated successfully',
         book,
       });
     }),
@@ -324,13 +324,13 @@ module.exports = function (app) {
 
   // Delete a book
   app.delete(
-    "/api/books/:id",
+    '/api/books/:id',
     asyncHandler(async (req, res) => {
       const { id } = req.params;
 
       if (!id || isNaN(id)) {
         return res.status(400).json({
-          error: "Invalid book ID",
+          error: 'Invalid book ID',
         });
       }
 
@@ -338,14 +338,14 @@ module.exports = function (app) {
 
       if (!book) {
         return res.status(404).json({
-          error: "Book not found",
+          error: 'Book not found',
         });
       }
 
       await book.destroy();
 
       res.json({
-        message: "Book deleted successfully",
+        message: 'Book deleted successfully',
         deletedBook: {
           id: book.id,
           title: book.title,
@@ -357,20 +357,20 @@ module.exports = function (app) {
 
   // Get database statistics
   app.get(
-    "/api/stats",
+    '/api/stats',
     asyncHandler(async (req, res) => {
       const [totalBooks, totalPages, avgPages, genres] = await Promise.all([
         Book.count(),
-        Book.sum("pages"),
+        Book.sum('pages'),
         Book.findAll({
           attributes: [
-            [Book.sequelize.fn("AVG", Book.sequelize.col("pages")), "avgPages"],
+            [Book.sequelize.fn('AVG', Book.sequelize.col('pages')), 'avgPages'],
           ],
         }),
         Book.findAll({
-          attributes: ["genre", [Book.sequelize.fn("COUNT", "*"), "count"]],
-          group: ["genre"],
-          order: [[Book.sequelize.fn("COUNT", "*"), "DESC"]],
+          attributes: ['genre', [Book.sequelize.fn('COUNT', '*'), 'count']],
+          group: ['genre'],
+          order: [[Book.sequelize.fn('COUNT', '*'), 'DESC']],
         }),
       ]);
 

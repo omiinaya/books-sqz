@@ -46,6 +46,7 @@ Please include the following information in your report:
 Our application implements the following security measures:
 
 #### Application Security
+
 - Helmet.js for security headers
 - Rate limiting on API endpoints
 - Input validation and sanitization
@@ -55,6 +56,7 @@ Our application implements the following security measures:
 - Environment variable protection
 
 #### Infrastructure Security
+
 - HTTPS enforcement
 - Secure cookie configuration
 - Content Security Policy (CSP)
@@ -63,6 +65,7 @@ Our application implements the following security measures:
 - Automated security scanning
 
 #### Development Security
+
 - ESLint security rules
 - Automated dependency vulnerability scanning
 - Pre-commit security checks
@@ -107,6 +110,7 @@ Once a vulnerability is fixed:
 ### Contact
 
 For security-related questions or concerns:
+
 - Security Email: [security@books-sqz.com] (replace with actual email)
 - General Contact: [contact@books-sqz.com] (replace with actual email)
 - GitHub Issues: For non-security bugs and feature requests

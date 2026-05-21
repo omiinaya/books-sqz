@@ -3,12 +3,14 @@
 ## MySQL Setup for Windows
 
 ### Option 1: Install MySQL Server
+
 1. Download MySQL Community Server from https://dev.mysql.com/downloads/mysql/
 2. Run the installer and follow the setup wizard
 3. Set root password during installation
 4. Start MySQL service
 
 ### Option 2: Use XAMPP (Recommended for Development)
+
 1. Download XAMPP from https://www.apachefriends.org/
 2. Install XAMPP
 3. Open XAMPP Control Panel
@@ -16,6 +18,7 @@
 5. Default credentials: user=`root`, password=`` (empty)
 
 ### Option 3: Use Docker (if you have Docker installed)
+
 ```bash
 # Run MySQL in Docker
 docker run --name books-mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=sequelize_library -p 3306:3306 -d mysql:8.0
@@ -30,11 +33,13 @@ docker start books-mysql
 ## Database Configuration
 
 1. Create the database:
+
 ```sql
 CREATE DATABASE sequelize_library CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ```
 
 2. Create a dedicated user (optional but recommended):
+
 ```sql
 CREATE USER 'books_user'@'localhost' IDENTIFIED BY 'books_password';
 GRANT ALL PRIVILEGES ON sequelize_library.* TO 'books_user'@'localhost';
@@ -51,6 +56,7 @@ cp .env.example .env
 ```
 
 Edit `.env` with your database credentials:
+
 ```bash
 DB_NAME=sequelize_library
 DB_USER=root
@@ -62,6 +68,7 @@ DB_PORT=3306
 ## Testing Database Connection
 
 Run the connection test:
+
 ```bash
 npm run test:db
 ```
